@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+        <title> 虚拟房间 【<%= data.roomname%>】</title>
+        <link rel="stylesheet" href="/common/css/reset.css"/>
+        <script src="/common/js/lib/jquery/dist/jquery.min.js"></script>
+        <script src="/common/js/lib/jquery-qrcode/jquery.qrcode.min.js"></script>
+	</head>
+	<body>
+    <div id="output"></div>
+    <div id="app-main">
+        <div class="room-place">
+            <div class="room-empty-seat" >
+                <i class="clearmid"></i>
+                <div class="mid-content">
+                    <div class="room-empty-seat-tip">用手机扫描二维码，并按准备</div>
+                    <br>
+                    <div class="qrcode"></div>
+                </div>
+            </div>            
+            <div class="room-game-view" style="display:none">
+                <i class="clearmid"></i>
+                <section class="container vertical">
+                  <div class="adjust face">
+                    <div class="box" >
+                      <figure class="front"><span>前</span></figure>
+                      <figure class="back"><span>后</span></figure>
+                      <figure class="right"><span>右</span></figure>
+                      <figure class="left"><span>左</span></figure>
+                      <figure class="top"><span>顶</span></figure>
+                      <figure class="bottom"><span>底</span></figure>
+                    </div>
+                   </div>
+                </section>     
+            </div>
+        </div>        
+        <div class="room-place">
+            <div class="room-empty-seat" >
+                <i class="clearmid"></i>
+                <div class="mid-content">
+                    <div class="room-empty-seat-tip">用手机扫描二维码，并按准备</div>
+                    <br>
+                    <div class="qrcode"></div>
+                </div>
+            </div>            
+            <div class="room-game-view" style="display:none">
+                <i class="clearmid"></i>
+                <section class="container vertical">
+                  <div class="adjust face">
+                    <div class="box" >
+                      <figure class="front"><span>前</span></figure>
+                      <figure class="back"><span>后</span></figure>
+                      <figure class="right"><span>右</span></figure>
+                      <figure class="left"><span>左</span></figure>
+                      <figure class="top"><span>顶</span></figure>
+                      <figure class="bottom"><span>底</span></figure>
+                    </div>
+                   </div>
+                </section>     
+            </div>
+        </div>
+    </div>
+      <style type="text/css">
+          #app-main{
+            font-size: 0px;
+            height: 100%;
+          }
+          .room-place{
+            display: inline-block;
+            height: 100%;
+            width: 50%;
+            text-align: center;
+            vertical-align: middle;
+            border-right: 1px dotted #ccc;
+          }
+          .room-place:last-child{
+            border: none;
+          }
+          .room-empty-seat{
+            height: 100%;
+          }
+          .mid-content{
+            vertical-align: middle;
+            display: inline-block;
+            font-size: 20px;
+          }
+          .room-game-view{
+            font-size: 18px;
+            text-align: center;
+            position: relative;
+            height: 100%;
+            padding-top: 0.1px;
+          }
+        .container.vertical{
+          width: 160px;
+        }
+        
+        .container.vertical .box .front,
+        .container.vertical .box .back {
+          width: 160px;
+          height: 200px;
+        }
+
+         .container.vertical .box .right,
+        .container.vertical .box .left {
+          width: 100px;
+          height: 200px;
+        }
+
+        .container.vertical .box .top,
+        .container.vertical .box .bottom {
+          width: 160px;
+          height: 100px;
+        }
+        .container.vertical .box .right {
+          -webkit-transform: rotateY(   90deg ) translateZ( 10px );
+             -moz-transform: rotateY(   90deg ) translateZ( 10px );
+               -o-transform: rotateY(   90deg ) translateZ( 10px );
+                  transform: rotateY(   90deg ) translateZ( 10px );
+        }
+        
+        .container.vertical .box .back {
+          -webkit-transform: rotateY(   -180deg ) translateZ( 50px  );
+             -moz-transform: rotateY(   -180deg ) translateZ( 50px  );
+               -o-transform: rotateY(   -180deg ) translateZ( 50px  );
+                  transform: rotateY(   -180deg ) translateZ( 50px  );
+        }
+        .container {
+          width: 300px;
+          height: 200px;
+          position: relative;
+          display: inline-block;
+          vertical-align: middle;
+          margin: 50px auto 40px;
+          border: 1px solid #CCC;
+          -webkit-perspective: 1200px;
+             -moz-perspective: 1200px;
+               -o-perspective: 1200px;
+                  perspective: 1200px;
+        }
+
+        /*.adjust.face span {
+          display: inline-block;
+          -webkit-transform: rotate(  90deg ) ;
+             -moz-transform: rotate(  90deg ) ;
+               -o-transform: rotate(  90deg ) ;
+                  transform: rotate(  90deg ) ;
+        }*/
+        
+        .adjust.face {
+          -webkit-transform: rotateX( 90deg);
+             -moz-transform: rotateX( 90deg);
+               -o-transform: rotateX( 90deg);
+                  transform: rotateX( 90deg);
+        }
+          
+        .adjust.vertical {
+          -webkit-transform: rotate(  90deg ) ;
+             -moz-transform: rotate(  90deg ) ;
+               -o-transform: rotate(  90deg ) ;
+                  transform: rotate(  90deg ) ;
+        }
+        
+        .adjust{
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          transform-style:preserve-3d;
+        }
+        .box {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          -webkit-transform-style: preserve-3d;
+             -moz-transform-style: preserve-3d;
+               -o-transform-style: preserve-3d;
+                  transform-style: preserve-3d;
+        }
+
+        .box figure {
+          display: block;
+          position: absolute;
+          border: 2px solid #ded5d5;
+          line-height: 200px;
+          font-size: 40px;
+          text-align: center;
+          font-weight: bold;
+          color: white;
+          box-sizing: border-box;
+        }
+
+        .box.panels-backface-invisible figure {
+          -webkit-backface-visibility: hidden;
+             -moz-backface-visibility: hidden;
+               -o-backface-visibility: hidden;
+                  backface-visibility: hidden;
+        }
+
+        .box .front,
+        .box .back {
+          width: 296px;
+          height: 196px;
+        }
+
+        .box .right,
+        .box .left {
+          width: 96px;
+          height: 196px;
+          left: 100px;
+        }
+
+        .box .top,
+        .box .bottom {
+          width: 296px;
+          height: 96px;
+          top: 50px;
+          line-height: 96px;
+        }
+
+
+        .box .front  { background: hsla( 000, 100%, 50%, 0.7 ); }
+        .box .back   { background: hsla( 160, 100%, 50%, 0.7 ); }
+        .box .right  { background: hsla( 120, 100%, 50%, 0.7 ); }
+        .box .left   { background: hsla( 180, 100%, 50%, 0.7 ); }
+        .box .top    { background: hsla( 240, 100%, 50%, 0.7 ); }
+        .box .bottom { background: hsla( 300, 100%, 50%, 0.7 ); }
+
+        .box .front  {
+          -webkit-transform: translateZ( 50px );
+             -moz-transform: translateZ( 50px );
+               -o-transform: translateZ( 50px );
+                  transform: translateZ( 50px );
+        }
+        .box .back   {
+          -webkit-transform: rotateX( -180deg ) translateZ(  50px );
+             -moz-transform: rotateX( -180deg ) translateZ(  50px );
+               -o-transform: rotateX( -180deg ) translateZ(  50px );
+                  transform: rotateX( -180deg ) translateZ(  50px );
+        }
+        .box .right {
+          -webkit-transform: rotateY(   90deg ) translateZ( 150px );
+             -moz-transform: rotateY(   90deg ) translateZ( 150px );
+               -o-transform: rotateY(   90deg ) translateZ( 150px );
+                  transform: rotateY(   90deg ) translateZ( 150px );
+        }
+        .box .left {
+          -webkit-transform: rotateY(  -90deg ) translateZ( 150px );
+             -moz-transform: rotateY(  -90deg ) translateZ( 150px );
+               -o-transform: rotateY(  -90deg ) translateZ( 150px );
+                  transform: rotateY(  -90deg ) translateZ( 150px );
+        }
+        .box .top {
+          -webkit-transform: rotateX(   90deg ) translateZ( 100px );
+             -moz-transform: rotateX(   90deg ) translateZ( 100px );
+               -o-transform: rotateX(   90deg ) translateZ( 100px );
+                  transform: rotateX(   90deg ) translateZ( 100px );
+        }
+        .box .bottom {
+          -webkit-transform: rotateX(  -90deg ) translateZ( 100px );
+             -moz-transform: rotateX(  -90deg ) translateZ( 100px );
+               -o-transform: rotateX(  -90deg ) translateZ( 100px );
+                  transform: rotateX(  -90deg ) translateZ( 100px );
+        }
+        
+        .box.vertical.face {
+          -webkit-transform: rotate(  90deg ) rotateY( 90deg);
+             -moz-transform: rotate(  90deg ) rotateY( 90deg);
+               -o-transform: rotate(  90deg ) rotateY( 90deg);
+                  transform: rotate(  90deg ) rotateY( 90deg);
+        }
+          .object{
+            height: 320px;
+            width: 180px;
+            background: #999;
+            display: inline-block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -160px;
+            margin-left: -90px;
+          }
+          .object{
+            /*transition: 0.1s;*/
+            /*backface-visibility:visible;*/
+          }
+      </style>
+	  <script>
+	  
+	  (function(win){
+      if(!window.WebSocket) {document.body.innerHTML = "<center><h1>浏览器老了呢！</h1></center>";return ;}
+	    
+	    var uri = win.location.pathname.split('/'),roomNumber;
+
+      function initUrlData(){
+
+        if(uri.length>=3 && uri[1] == "roomddd"){
+          roomNumber = uri[2];
+          return 1;
+        }else{
+          window.location.href = "/index";
+          return 0;
+        }
+      }
+      
+      function initWebSocket(){
+        
+        var wsUri = "ws://"+ window.location.hostname +":<%= config.wsport %>"+"/ws/room"; 
+        
+        var websocket = new WebSocket(wsUri); 
+
+        websocket.onopen = function(evt) { 
+            websocket.send(JSON.stringify({room:roomNumber,platform:"p"})); 
+        }; 
+
+        websocket.onclose = function(evt) { 
+
+        }; 
+
+        websocket.onmessage = function(evt) { 
+            parseMessage(evt.data) 
+        }; 
+        websocket.onerror = function(evt) { 
+
+        }; 
+         
+        function parseMessage(msg){
+            if(msg=="{}"){//保活
+              websocket.send(JSON.stringify({room:roomNumber,platform:"p"}))
+              return ;
+            }
+            
+            var msgObj = JSON.parse(msg),content;
+
+            msgObj.place = parseInt(msgObj.place)-1;
+            var $seat = $(".room-place").eq(msgObj.place);
+            
+            if(msgObj.dowhat != "lost"){
+              $seat.find(".room-empty-seat").hide();
+              $seat.find(".room-game-view").show();
+            }
+
+            if(msgObj.dowhat == "connect"){
+
+            }else if(msgObj.dowhat == "message"){
+                content = JSON.parse(msgObj.content);
+                $seat.find(".box").css("transform","rotate3d("+ (-parseFloat(content.x))+","+(parseFloat(content.y))+","+(-parseFloat(content.z))+","+content.rotate +"deg)"); 
+            }else if(msgObj.dowhat == "ready"){
+                content = JSON.parse(msgObj.content);
+                $seat.find(".adjust").css("transform","rotate3d("+ (-parseFloat(content.x))+","+(parseFloat(content.y))+","+(-parseFloat(content.z))+","+(-parseFloat(content.rotate)) +"deg)"); 
+            }else if(msgObj.dowhat == "lost"){
+              $seat.find(".room-empty-seat").show();
+              $seat.find(".room-game-view").hide().find(".adjust,.box").removeAttr("style");
+            }
+        }
+      }
+	    if(initUrlData()){
+	       initWebSocket(); 
+	    }
+
+        $(".room-place .qrcode").each(function(index,item){
+            $(item).qrcode({
+                        "size": 200,
+                        "color": "#3a3",
+                        "text": window.location.origin + "/roomddd/" + roomNumber + "/" + (index+1)
+                    });
+        })
+
+	  })(window);
+	  
+	  </script>
+	</body>
+</html>

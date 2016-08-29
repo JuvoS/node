@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+        <title> 虚拟房间 【<%= data.roomname%>】 </title>
+        <link rel="stylesheet" href="/common/css/reset.css"/>
+        <script src="/common/js/lib/jquery/dist/jquery.min.js"></script>
+        <script src="/common/js/lib/jquery-qrcode/jquery.qrcode.min.js"></script>
+  </head>
+  <body>
+    <div id="output"></div>
+    <div id="app-main">
+        <div class="room-place">
+            <div class="room-empty-seat">
+                <i class="clearmid"></i>
+                <div class="mid-content">
+                    <div class="room-empty-seat-tip">用手机扫描二维码，并按准备</div>
+                    <br>
+                    <div class="qrcode"></div>
+                </div>
+            </div>            
+            <div class="room-game-view" style="display:none">
+                <div class="object"></div>
+            </div>
+        </div>        
+        <div class="room-place">
+            <div class="room-empty-seat">
+                <i class="clearmid"></i>
+                <div class="mid-content">
+                    <div class="room-empty-seat-tip">用手机扫描二维码，并按准备</div>
+                    <br>
+                    <div class="qrcode"></div>
+                </div>
+            </div>            
+            <div class="room-game-view" style="display:none">
+                <div class="object"></div>
+            </div>
+        </div>
+    </div>
+      <style type="text/css">
+          #app-main{
+            font-size: 0px;
+            height: 100%;
+          }
+          .room-place{
+            display: inline-block;
+            height: 100%;
+            width: 50%;
+            text-align: center;
+            vertical-align: middle;
+            border-right: 1px dotted #ccc;
+          }
+          .room-place:last-child{
+            border: none;
+          }
+          .room-empty-seat{
+            height: 100%;
+          }
+          .mid-content{
+            vertical-align: middle;
+            display: inline-block;
+            font-size: 22px;
+          }
+          .room-game-view{
+            font-size: 18px;
+            text-align: center;
+            position: relative;
+            height: 100%;
+          }
+          .object{
+            height: 320px;
+            width: 180px;
+            background: #999;
+            display: inline-block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -160px;
+            margin-left: -90px;
+          }
+          .object{
+            transition: 0.1s;
+          }
+      </style>
+    <script>
+    
+    (function(win){
+      if(!window.WebSocket) {document.body.innerHTML = "<center><h1>浏览器老了呢！</h1></center>";return ;}
+  
+      var uri = win.location.pathname.split('/'),roomNumber;
+
+      function initUrlData(){
+
+        if(uri.length>=3 && uri[1] == "roomdd"){
+          roomNumber = uri[2];
+          return 1;
+        }else{
+          window.location.href = "/index";
+          return 0;
+        }
+      }
+      
+      function initWebSocket(){
+        
+        var wsUri = "ws://"+ window.location.hostname +":<%= config.wsport %>"+"/ws/room"; 
+        var output = document.getElementById("output") ;
+        
+        var websocket = new WebSocket(wsUri); 
+
+        websocket.onopen = function(evt) { 
+            websocket.send(JSON.stringify({room:roomNumber,platform:"p"})); 
+        }; 
+
+        websocket.onclose = function(evt) { 
+
+        }; 
+
+        websocket.onmessage = function(evt) { 
+            parseMessage(evt.data) 
+        }; 
+        websocket.onerror = function(evt) { 
+
+        }; 
+         
+        lastPaintRotate = 0; 
+        function parseMessage(msg){
+            if(msg=="{}"){//保活
+              websocket.send(JSON.stringify({room:roomNumber,platform:"p"}))
+              return ;
+            }
+            
+            var msgObj = JSON.parse(msg),content;
+
+            msgObj.place = parseInt(msgObj.place)-1;
+            var $seat = $(".room-place").eq(msgObj.place);
+
+            if(msgObj.dowhat == "connect"){
+                $seat.find(".room-empty-seat").hide();
+                $seat.find(".room-game-view").show();
+            }else if(msgObj.dowhat == "message"){
+                content = JSON.parse(msgObj.content);
+                $seat.find(".room-empty-seat").hide();
+                $seat.find(".room-game-view").show();
+                if(Math.abs(lastPaintRotate - parseFloat(content.rotate)) > 120){
+                  $seat.find(".object").css("transition","0s")
+                }else{
+                  $seat.find(".object").css("transition","0.1s");
+                }
+                $seat.find(".object").css("transform","rotate3d(0,0,1," + content.rotate +"deg ) ");
+                lastPaintRotate = content.rotate;
+            }else if(msgObj.dowhat == "lost"){
+              $seat.find(".room-empty-seat").show();
+              $seat.find(".room-game-view").hide().find(".object").removeAttr("style");
+            }
+        }
+      }
+      
+      if(initUrlData()){
+         initWebSocket(); 
+      }
+
+      $(".room-place .qrcode").each(function(index,item){
+          $(item).qrcode({
+                "size": 200,
+                "color": "#3a3",
+                "text": window.location.origin + "/roomdd/" + roomNumber + "/" + (index+1)
+            });
+      })
+
+    })(window);
+    
+    </script>
+  </body>
+</html>

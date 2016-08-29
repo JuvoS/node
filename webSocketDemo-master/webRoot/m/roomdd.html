@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script src="/common/js/lib/jquery/dist/jquery.min.js"></script>
+    <title>虚拟房间 【<%= data.roomname%>】</title>
+  </head>
+<body>
+<div id="main-content"></div>
+<script>
+    var uri = window.location.pathname.split('/'),roomNumber,place;
+
+    function initUrlData(){
+
+      if(uri.length>=4 && uri[1] == "roomdd"){
+        roomNumber = uri[2];
+        place = uri[3];
+        document.title += (" 座【"+ place +"】" )
+        return 1;
+      }else{
+        window.location.href = "/index";
+        return 0;
+      }
+    }
+    if(!window.WebSocket){
+        alert("浏览器过时了");
+        document.write("<center>浏览器过时了</center>")
+    }else{
+
+        initUrlData();
+
+        var wsUri = "ws://"+ window.location.hostname +":<%= config.wsport %>"+"/ws/room"; 
+        var websocket = new WebSocket(wsUri);
+
+        websocket.onopen = function(evt) { 
+
+        }; 
+        websocket.onclose = function(evt) { 
+          alert("close");
+        }; 
+        websocket.onmessage = function(evt) { 
+
+        }; 
+        websocket.onerror = function(evt) { 
+          alert("error")
+        }; 
+            
+        var str="",lastPaintRotate = 0;
+        
+        window.addEventListener("devicemotion", function(event) {
+
+            if(event.rotationRate && event.rotationRate.gamma ){
+                str += ( "gamma: 　" + event.rotationRate.gamma.toFixed(6)+"<br>"
+                        +"beta: 　" + event.rotationRate.beta.toFixed(6)+"<br>"
+                        +"alpha: 　" + event.rotationRate.alpha.toFixed(6)+"<br>");
+            }
+            if(event.acceleration && event.acceleration.x){
+                str += ( "x: 　" + event.acceleration.x.toFixed(6)+"<br>"
+                        +"y: 　" + event.acceleration.y.toFixed(6)+"<br>"
+                        +"z: 　" + event.acceleration.z.toFixed(6)+"<br>");
+            // $$('#main-content').html(JSON.stringify(event.acceleration))
+            }
+            if(event.accelerationIncludingGravity && event.accelerationIncludingGravity.x){
+              str += ( "gx: 　" + event.accelerationIncludingGravity.x.toFixed(6)+"<br>"
+                        +"gy: 　" + event.accelerationIncludingGravity.y.toFixed(6)+"<br>"
+                        +"gz: 　" + event.accelerationIncludingGravity.z.toFixed(6)+"<br>");
+            }
+
+            var motioninfo = {};
+            motioninfo.rotate = Math.atan2( 0 - event.accelerationIncludingGravity.x.toFixed(2),event.accelerationIncludingGravity.y).toFixed(2)/Math.PI * 180 ; 
+            motioninfo.rotate = motioninfo.rotate.toFixed(2);
+            
+            if(Math.abs(lastPaintRotate - parseFloat(motioninfo.rotate)) > 0.8){ // 微小变化不发消息
+              websocket.send(JSON.stringify({room:roomNumber,place:place,msg:JSON.stringify(motioninfo) }));
+              lastPaintRotate = motioninfo.rotate;
+            }
+            
+            $('#main-content').html(str);
+            
+            str = "";
+        }, true);
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "websocketdemo",
+  "version": "1.0.0",
+  "description": "A great real-time application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.coding.net:OverTree/webSocketDemo.git"
+  },
+  "keywords": [
+    "real-time"
+  ],
+  "author": "JohnWang from maxleap.cn",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^2.4.2",
+    "lodash": "^4.14.0",
+    "ws": "^1.1.0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "websocketdemo",
+  "description": "A great real-time application",
+  "main": "index.js",
+  "authors": [
+    "JohnWang from maxleap.cn"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "real-time"
+  ],
+  "moduleType": [],
+  "homepage": "",
+  "private": true,
+  "dependencies": {
+    "jquery": "~2.2.4",
+    "jquery-qrcode": "*",
+    "lodash": "~4.13.1"
+  }
+}

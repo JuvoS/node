@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+    <script src="/common/js/lib/jquery/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="/common/css/reset.css"/>
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <title> 虚拟大厅  </title>
+		<style>
+		  #room-list{
+		    float: left;
+		    width: 50%;
+        font-size: 16px;
+        border-right: 1px solid green;
+        height: 100%;
+        text-align: center;
+        overflow: auto;
+		  }
+      #room-list table{
+        table-layout: fixed;
+        width:100%;
+      }
+      #room-list table td:first-child{
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+		  #operate-pad{
+        padding: 20px;
+        height: 100%;
+		    float: right;
+		    width: 50%;
+		    text-align: center;
+        font-size: 22px;
+		  }
+		</style>
+	</head>
+	<body>
+	  <div id="room-list" class="loading" >
+	    <table id="room-list-table" border="0" cellspacing="20" cellpadding="0">
+	    	<thead>
+	    	  <th width="40%">房间名</th>
+	    	  <th width="30%">创建时间</th>
+	    	  <th >类型</th>
+	    	  <th >玩家</th>
+	    	  <th >投影</th>
+	    	</thead>
+	    </table>
+	  </div>
+	  <div id="operate-pad">
+      <a id="create" href="javascript:void(0)" onclick="applyroom('ddd')">创建3D房间</a><br><br>
+      <a id="create2d" href="javascript:void(0)" onclick="applyroom('dd')">创建2D房间</a>	    
+	  </div>
+	  <!--<a id="create" href="/room">创建房间</a>-->
+	  <script>
+      window.escapeHTML = function(a){
+        return a
+          .replace(/&/g,"&amp;")
+          .replace(/</g,"&lt;")
+          .replace(/>/g,"&gt;")
+          .replace(/ /g,"&nbsp;")
+          .replace(/"/g,"&#34;")
+          .replace(/'/g,"&#39;")
+      }
+
+	    function applyroom(type){
+     
+      var roomname = prompt("请输入房间名：","我爱苏打绿");
+        if (roomname!=null){
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST","/api/Room",false); 
+          xhr.send(JSON.stringify({maxplayer:2,type:type,roomname:roomname}));
+          var roomid = xhr.responseText;
+          if(roomid){
+            window.location.href = "/room"+type+"/" + roomid;
+          }
+        }
+	    }
+
+	    (function(win){
+	      if(!window.WebSocket) {document.body.innerHTML = "<center><h1>浏览器老了呢！</h1></center>";return ;}
+	      
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET","/api/Room",true); //异步
+        xhr.onreadystatechange = function(){
+          if (xhr.readyState==4){// 4 = "loaded"
+            if (xhr.status==200){// 200 = OK
+              JSON.parse(xhr.response).forEach(function(item){
+                $("#room-list-table").append(
+                  "<tr>"
+                  +"<td>"+"<a href='/room"+item.type+"/"+item.id+"'>"+escapeHTML(item.roomname)+"</a>"+"</td>"
+                  +"<td>"+(new Date(item.startTime)).toLocaleString()+"</td>"
+                  +"<td>"+item.type+"</td>" 
+                  +"<td>"+item.player+"/"+item.maxplayer+"</td>" 
+                  +"<td>"+item.projector+"</td>" 
+                  +"</tr>");
+              });
+              $("#room-list").removeClass("loading");
+            }else{
+              alert("Problem retrieving XML data");
+            }
+          }
+        }
+        xhr.send("");
+	    })(window);
+	  </script>
+	</body>
+</html>
